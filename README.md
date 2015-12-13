@@ -38,4 +38,5 @@ Data Set contains sentences from the abstract and introduction of 90 scientific 
   - 6 JDM articles with 200 sentences
 
 3. "word_lists"
-This directory contains one plaintext file for each of the 4 categories AIMX, OWNX, CONT and BASE. Each plaintext file lists the indicator words for the corresponding category. This directory also contains a stopwords file. The stopwords file contains stopwords that are not likely to be important for the taske of sentence classification (how, show, our...). File contains a set of stopwords that are not likely to be strong features for this task and thus can be safely removed.
+
+  This directory contains one plaintext file for each of the 4 categories AIMX, OWNX, CONT and BASE. Each plaintext file lists the indicator words for the corresponding category. This directory also contains a stopwords file. The stopwords file contains stopwords that are not likely to be important for the taske of sentence classification (how, show, our...). File contains a set of stopwords that are not likely to be strong features for this task and thus can be safely removed.
