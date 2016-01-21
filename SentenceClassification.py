@@ -2,7 +2,7 @@ __author__ = 'Nenad Todorovic'
 __author__ = 'Dragan Vidakovic'
 
 import os
-
+import gensim as gs
 
 def list_files_from_directory(directory):
     """Lists all file paths from given directory"""
@@ -31,12 +31,32 @@ def read_file(path):
 def process_line(line):
     """Returns sentence category and sentence in given line"""
 
-    splits = line.split("\t")
-    category = splits[0]
-    sentence = splits[1]
-    return category, sentence
+    if "\t" in line:
+        splits = line.split("\t")
+        category = splits[0]
+        sentence = splits[1].lower()
+        sentence_array = sentence.split(" ")
+        return category, sentence_array
+    else:
+        splits = line.split(" ")
+        category = splits[0]
+        sentence = line[len(category)+1:].lower()
+        sentence_array = sentence.split(" ")
+        return category, sentence_array
 
 
+tr_folder = list_files_from_directory("training_set")
+all_sentences = []
+for file in tr_folder:
+    lines = read_file(file)
+    for line in lines:
+        c, s = process_line(line)
+        all_sentences.append(s)
+#        print(s)
 
+#print(len(all_sentences))
 
-
+#model = gs.Word2Vec.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
+model = gs.models.Word2Vec()
+model = gs.models.Word2Vec.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
+print(model.similarity('examine', 'examination'))
