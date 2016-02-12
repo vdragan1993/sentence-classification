@@ -2,7 +2,8 @@ __author__ = 'Nenad Todorovic'
 __author__ = 'Dragan Vidakovic'
 
 import os
-import gensim as gs
+import json
+
 
 def list_files_from_directory(directory):
     """Lists all file paths from given directory"""
@@ -35,28 +36,26 @@ def process_line(line):
         splits = line.split("\t")
         category = splits[0]
         sentence = splits[1].lower()
-        sentence_array = sentence.split(" ")
-        return category, sentence_array
+        return category, sentence
     else:
         splits = line.split(" ")
         category = splits[0]
         sentence = line[len(category)+1:].lower()
-        sentence_array = sentence.split(" ")
-        return category, sentence_array
+        return category, sentence
 
 
 tr_folder = list_files_from_directory("training_set")
-all_sentences = []
+all_json = []
 for file in tr_folder:
     lines = read_file(file)
     for line in lines:
         c, s = process_line(line)
-        all_sentences.append(s)
-#        print(s)
+        json_data = {
+            'text': s,
+            'label': c
+        }
 
-#print(len(all_sentences))
+        all_json.append(json_data)
 
-#model = gs.Word2Vec.load_word2vec_format('GoogleNews-vectors-negative300.bin', binary=True)
-model = gs.models.Word2Vec()
-model = gs.models.Word2Vec.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)
-print(model.similarity('examine', 'examination'))
+with open("jsonFile.txt", "w") as outfile:
+    json.dump(all_json, outfile)
