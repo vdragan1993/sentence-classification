@@ -5,7 +5,16 @@ import os
 import json
 from textblob.classifiers import NaiveBayesClassifier
 from textblob.classifiers import DecisionTreeClassifier
+from textblob.classifiers import NLTKClassifier
 import time
+import nltk.classify
+from sklearn.svm import LinearSVC
+
+
+class SVMClassifier(NLTKClassifier):
+    """Class that wraps around nltk.classify module for SVM Classifier"""
+
+    nltk_class = nltk.classify.SklearnClassifier(LinearSVC())
 
 
 def list_files_from_directory(directory):
@@ -48,6 +57,8 @@ def process_line(line):
 
 
 def create_json_file(input_folder, destination_file):
+    """Writes training data from given folder into formatted JSON file"""
+
     tr_folder = list_files_from_directory(input_folder)
     all_json = []
     for file in tr_folder:
@@ -67,6 +78,8 @@ def create_json_file(input_folder, destination_file):
 
 
 def prepare_test_data(input_folder):
+    """Maps each sentence to it's category"""
+
     test_folder = list_files_from_directory(input_folder)
     t_sentences = []
     t_categories = []
@@ -84,6 +97,7 @@ def prepare_test_data(input_folder):
 # prepare training and test data
 create_json_file("training_set", "training.json")
 categories, sentences = prepare_test_data("test_set")
+
 # Bayes Classifier
 print("Training Naive Bayes Classifier...")
 start_nbc = time.time()
@@ -133,4 +147,30 @@ print("Number of tests: " + str(len(sentences)))
 print("Correct tests: " + str(correct))
 accuracy = correct / len(sentences)
 print("Decision Tree Classifier accuracy: " + str(accuracy))
+print("Testing time (in seconds): " + str(elapsed))
+
+print()
+# SVM Classifier
+print("Training SVM Classifier...")
+start_svm = time.time()
+with open("training.json", 'r') as training:
+    svm_c = SVMClassifier(training, format="json")
+stop_svm = time.time()
+print("Training SVM Classifier completed...")
+elapsed = stop_svm - start_svm
+print("Training time (in seconds): " + str(elapsed))
+print("Testing SVM Classifier...")
+correct = 0
+start_svm = time.time()
+for i in range(0, len(sentences)):
+    category = str(svm_c.classify(sentences[i])).lower()
+    expected = str(categories[i]).lower()
+    if category == expected:
+        correct += 1
+stop_svm = time.time()
+elapsed = stop_svm - start_svm
+print("Number of tests: " + str(len(sentences)))
+print("Correct tests: " + str(correct))
+accuracy = correct / len(sentences)
+print("SVM Classifier accuracy: " + str(accuracy))
 print("Testing time (in seconds): " + str(elapsed))
