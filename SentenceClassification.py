@@ -9,6 +9,7 @@ from textblob.classifiers import NLTKClassifier
 import time
 import nltk.classify
 from sklearn.svm import LinearSVC
+import re
 
 
 class SVMClassifier(NLTKClassifier):
@@ -48,11 +49,21 @@ def process_line(line):
         splits = line.split("\t")
         s_category = splits[0]
         sentence = splits[1].lower()
+        for sw in stopwords:
+            sentence = sentence.replace(sw, "")
+        pattern = re.compile("[^\w']")
+        sentence = pattern.sub(' ', sentence)
+        sentence = re.sub(' +', ' ', sentence)
         return s_category, sentence
     else:
         splits = line.split(" ")
         s_category = splits[0]
         sentence = line[len(s_category)+1:].lower()
+        for sw in stopwords:
+            sentence = sentence.replace(sw, "")
+        pattern = re.compile("[^\w']")
+        sentence = pattern.sub(' ', sentence)
+        sentence = re.sub(' +', ' ', sentence)
         return s_category, sentence
 
 
@@ -94,6 +105,16 @@ def prepare_test_data(input_folder):
     return t_categories, t_sentences
 
 # main
+
+# loading stopwords
+input_stopwords = read_file("word_lists/stopwords.txt")
+stopwords = []
+for word in input_stopwords:
+    if word.endswith('\n'):
+        word = word[:-1]
+        stopwords.append(word)
+
+
 # prepare training and test data
 create_json_file("training_set", "training.json")
 categories, sentences = prepare_test_data("test_set")
