@@ -12,7 +12,7 @@ Automatically assigning input sentences to a set of categories. Sentence assigni
 
 # Data
 
-"Sentence Classification Data Set" downloaded from Machine Learning Repository of Center for Machine Learning and Intelligent Systems - University of California, Irvine ( http://cml.ics.uci.edu/ ).
+"Sentence Classification Data Set" downloaded from Machine Learning Repository of Center for Machine Learning and Intelligent Systems - University of California, Irvine (http://cml.ics.uci.edu/).
 Data Set contains data for  classification of sentences in scientific articles into categories:
   1. AIMX - The specific research goal of the paper
   2. OWNX - The author's own work (methods, results, conclusions...)
@@ -40,3 +40,13 @@ Data Set contains sentences from the abstract and introduction of 90 scientific 
 3. "word_lists"
 
   This directory contains one plaintext file for each of the 4 categories AIMX, OWNX, CONT and BASE. Each plaintext file lists the indicator words for the corresponding category. This directory also contains a stopwords file. The stopwords file contains stopwords that are not likely to be important for the taske of sentence classification (how, show, our...). File contains a set of stopwords that are not likely to be strong features for this task and thus can be safely removed.
+  
+# Implementation
+
+- Naive Bayes Classifier
+- Decision Tree Classifier
+- Support Vector Machines
+
+Implementation relied on NLTK (http://www.nltk.org/) and TextBlob (http://textblob.readthedocs.org/en/dev/) Python libraries. 
+
+Added "new_labeled_data" directory with 18000+ new sentences from scientific articles, labeled using implemented classifiers.
